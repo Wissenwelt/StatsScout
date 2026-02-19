@@ -17,7 +17,7 @@ Build a "thin-slice" agentic web app that demonstrates:
 ## ✨ Key Features (Requirements Mapping)
 
 ### 1. Agent Behaviour
--   **Goal:** "Who will win Sri Lanka vs Zimbabwe?"
+-   **Goal:** " Eg. Who will win Sri Lanka vs Zimbabwe?"
 -   **Plan:** The agent checks live scores -> identifies players -> consults internal knowledge -> calculates win probability -> delivers verdict.
 -   **Trace:** The UI displays a "Thinking..." accordion showing every tool call and thought process.
 
