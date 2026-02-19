@@ -1,0 +1,549 @@
+{
+    "players": {
+        "V. Kohli": {
+            "id": "sr:player:3993",
+            "scouting_report": "Struggles against left-arm pace initially. Susceptible to deliveries outside off stump moving away.",
+            "weaknesses": [
+                "Left-arm pace",
+                "Outswingers outside off"
+            ],
+            "strengths": [
+                "Cover drive",
+                "Flick off pads"
+            ]
+        },
+        "S. Smith": {
+            "id": "sr:player:4308",
+            "scouting_report": "Susceptible to leg-spin on turning tracks. Can be tied down by accurate short-pitched bowling.",
+            "weaknesses": [
+                "Leg-spin",
+                "Short ball"
+            ],
+            "strengths": [
+                "On drive",
+                "Cut shot"
+            ]
+        },
+        "J. Root": {
+            "id": "sr:player:63920",
+            "scouting_report": "Strong against spin. Vulnerable to high pace early in the innings.",
+            "weaknesses": [
+                "High pace",
+                "Inswingers"
+            ],
+            "strengths": [
+                "Sweep",
+                "Reverse sweep"
+            ]
+        },
+        "K. Williamson": {
+            "id": "sr:player:4330",
+            "scouting_report": "Excellent technique. Sometimes struggles with playing away from the body against swing.",
+            "weaknesses": [
+                "Swing bowling",
+                "Playing away from body"
+            ],
+            "strengths": [
+                "Late cut",
+                "Defense"
+            ]
+        },
+        "B. Azam": {
+            "id": "sr:player:584352",
+            "scouting_report": "Classy driver. Can get bogged down by accurate spin bowling in middle overs.",
+            "weaknesses": [
+                "Spin in middle overs",
+                "Dot ball pressure"
+            ],
+            "strengths": [
+                "Cover drive",
+                "Pull shot"
+            ]
+        },
+        "R. Sharma": {
+            "id": "sr:player:4208",
+            "scouting_report": "Destructive opener. Vulnerable to left-arm swing early on. NOTE: Rohit Sharma has retired from T20Is — not in T20 WC 2026.",
+            "weaknesses": [
+                "Left-arm inswing",
+                "Early movement"
+            ],
+            "strengths": [
+                "Pull shot",
+                "Lofted drives"
+            ]
+        },
+        "SK. Yadav": {
+            "id": "sr:player:446507",
+            "scouting_report": "India T20 WC 2026 captain. 360-degree batter. Susceptible to disciplined short-pitched pace targeting his body early in innings.",
+            "weaknesses": [
+                "Short-pitched pace targeting body early",
+                "Accurate in-ducking yorkers at death"
+            ],
+            "strengths": [
+                "360-degree range of shots",
+                "Ramp and scoop over fine leg"
+            ]
+        },
+        "J. Bumrah": {
+            "id": "sr:player:474267",
+            "scouting_report": "India's premier pace bowler. World-class yorker specialist. Difficult to score off in death overs. Tail-end batting liability.",
+            "weaknesses": [
+                "Left-handers attacking his natural angle early in spell",
+                "Tail-ender batting liability"
+            ],
+            "strengths": [
+                "Unplayable yorker",
+                "Deceptive slower ball"
+            ]
+        },
+        "Arshdeep Singh": {
+            "id": "sr:player:1028095",
+            "scouting_report": "India left-arm seamer. Outstanding with new ball and in death overs. Right-handers can target his angle over the off side.",
+            "weaknesses": [
+                "Right-handers targeting his outswing angle",
+                "Economy in middle overs 7-15"
+            ],
+            "strengths": [
+                "Left-arm inswing with new ball",
+                "Excellent death bowling yorkers"
+            ]
+        },
+        "Tilak Varma": {
+            "id": "sr:player:1437685",
+            "scouting_report": "Emerging left-handed middle-order batter for India. Can struggle against high-quality off-spin on turning tracks.",
+            "weaknesses": [
+                "Off-spin on turning tracks",
+                "High pace short ball early in innings"
+            ],
+            "strengths": [
+                "Flick over mid-wicket",
+                "Sweep shot against spin"
+            ]
+        },
+        "Hardik Pandya": {
+            "id": "sr:player:874763",
+            "scouting_report": "India all-rounder. Power hitter and seam bowling asset. Susceptible to quality leg-spin when trying to accelerate.",
+            "weaknesses": [
+                "Quality leg-spin in middle overs",
+                "Outswing when batting early in innings"
+            ],
+            "strengths": [
+                "Six-hitting over mid-on",
+                "New ball and death bowling"
+            ]
+        },
+        "Varun Chakaravarthy": {
+            "id": "sr:player:1437687",
+            "scouting_report": "India mystery spinner with multiple variations. Can be attacked by confident sweepers early in his spell.",
+            "weaknesses": [
+                "Confident left-handers sweeping against turn",
+                "Flat pitches that negate spin"
+            ],
+            "strengths": [
+                "Mystery ball variations",
+                "Carrom ball on dry surfaces"
+            ]
+        },
+        "SK. Raza": {
+            "id": "sr:player:294064",
+            "scouting_report": "Zimbabwe captain and key all-rounder. Experienced off-spinner and middle-order batter. Can be tied down by left-arm pace early.",
+            "weaknesses": [
+                "Left-arm pace targeting body line",
+                "Wrist spin on turning tracks"
+            ],
+            "strengths": [
+                "Off-spin on helpful surfaces",
+                "Driving through covers with bat"
+            ]
+        },
+        "B. Muzarabani": {
+            "id": "sr:player:1005973",
+            "scouting_report": "Zimbabwe's spearhead. Tall, high-action right-arm pace. Gets steep bounce. Can be driven when length is too full.",
+            "weaknesses": [
+                "Full-length deliveries can be driven",
+                "Left-handers cutting from outside off stump"
+            ],
+            "strengths": [
+                "Steep bounce from height",
+                "New ball movement and carry"
+            ]
+        },
+        "B. Bennett": {
+            "id": "sr:player:1437690",
+            "scouting_report": "Zimbabwe's aggressive top-order batter. Positive intent. Can be dismissed playing across the line against quality inswing.",
+            "weaknesses": [
+                "Quality inswing from pace",
+                "Consistent off-spin on slow surfaces"
+            ],
+            "strengths": [
+                "Pull and cut shot",
+                "Aggressive intent at the top of the order"
+            ]
+        },
+        "S. Hope": {
+            "id": "sr:player:246974",
+            "scouting_report": "West Indies captain and anchor batter. Dependable but can struggle to accelerate against accurate off-spin in middle overs.",
+            "weaknesses": [
+                "Consistent off-spin in middle overs",
+                "Accurate pace outside off stump"
+            ],
+            "strengths": [
+                "Square drives and cuts",
+                "Running between wickets"
+            ]
+        },
+        "S. Rutherford": {
+            "id": "sr:player:1028105",
+            "scouting_report": "West Indies explosive middle-order batter. Unstoppable when set. Vulnerable to googly bowling early in innings.",
+            "weaknesses": [
+                "Googly early in innings",
+                "High full-toss targeting chest"
+            ],
+            "strengths": [
+                "Big hitting over deep mid-wicket",
+                "Improvised scoops"
+            ]
+        },
+        "R. Powell": {
+            "id": "sr:player:778253",
+            "scouting_report": "West Indies power-hitter. Susceptible to accurate yorkers and good-length balls outside off stump.",
+            "weaknesses": [
+                "Accurate yorkers at death",
+                "Good-length deliveries outside off stump"
+            ],
+            "strengths": [
+                "Explosive six-hitting over cow corner",
+                "Good lower-order aggression"
+            ]
+        },
+        "R. Shepherd": {
+            "id": "sr:player:1028107",
+            "scouting_report": "West Indies pace-bowling all-rounder. Effective with new ball. Can be swept on spin-friendly conditions.",
+            "weaknesses": [
+                "Sweep shots on slow surfaces when bowling",
+                "Batting fragility against high pace"
+            ],
+            "strengths": [
+                "New ball swing bowling",
+                "Powerful lower-order batting"
+            ]
+        },
+        "A. Markram": {
+            "id": "sr:player:702614",
+            "scouting_report": "South Africa captain. Technically correct batter. Susceptible to left-arm spin in subcontinent conditions.",
+            "weaknesses": [
+                "Left-arm spin on turning tracks",
+                "Short-pitched pace targeting ribs"
+            ],
+            "strengths": [
+                "Drives through cover",
+                "Off-spin bowling variety"
+            ]
+        },
+        "K. Rabada": {
+            "id": "sr:player:947279",
+            "scouting_report": "South Africa pace spearhead. Generates genuine pace and bounce. Can be taken on by left-handers in powerplay.",
+            "weaknesses": [
+                "Left-handers attacking his angle in powerplay",
+                "Batting tail liability"
+            ],
+            "strengths": [
+                "Outswing with new ball",
+                "Yorker under pressure"
+            ]
+        },
+        "Q. de Kock": {
+            "id": "sr:player:223779",
+            "scouting_report": "Destructive South Africa opener. Prone to nicking off against outswing early on.",
+            "weaknesses": [
+                "Outswing early in innings",
+                "Left-arm pace with angle"
+            ],
+            "strengths": [
+                "Pull shot",
+                "Drives through covers"
+            ]
+        },
+        "D. Miller": {
+            "id": "sr:player:249761",
+            "scouting_report": "Prolific South Africa finisher. Can be contained by accurate yorkers at the death.",
+            "weaknesses": [
+                "Accurate death yorkers",
+                "Wrist spin early in innings"
+            ],
+            "strengths": [
+                "Six-hitting over long-on",
+                "Finishing under pressure"
+            ]
+        },
+        "J. Buttler": {
+            "id": "sr:player:165221",
+            "scouting_report": "England wicket-keeper batter. Destructive when set. Can be tied down by accurate leg-spin early in innings.",
+            "weaknesses": [
+                "Leg-spin early in innings",
+                "Reverse swing from pace"
+            ],
+            "strengths": [
+                "Ramp shot",
+                "Hitting down the ground"
+            ]
+        },
+        "P. Salt": {
+            "id": "sr:player:706768",
+            "scouting_report": "England aggressive opener. Prone to nicking off against outswing deliveries.",
+            "weaknesses": [
+                "Outswing to the slips",
+                "Pace off the pitch"
+            ],
+            "strengths": [
+                "Pull shot",
+                "Drives through covers"
+            ]
+        },
+        "L. Livingstone": {
+            "id": "sr:player:567914",
+            "scouting_report": "England power hitter. Can be foxed by wrist-spin bowling angling into his body.",
+            "weaknesses": [
+                "Wrist spin into the body",
+                "Short-pitched deliveries at pace"
+            ],
+            "strengths": [
+                "Slog sweep",
+                "Switch hit"
+            ]
+        },
+        "M. Santner": {
+            "id": "sr:player:376957",
+            "scouting_report": "New Zealand captain and slow left-arm spinner. Economical. Can be attacked by aggressive left-handers hitting with the turn.",
+            "weaknesses": [
+                "Left-handers attacking with the turn",
+                "Flat pitches that negate spin"
+            ],
+            "strengths": [
+                "Left-arm orthodox tight lines",
+                "Lower-order batting counter-punch"
+            ]
+        },
+        "F. Allen": {
+            "id": "sr:player:1028120",
+            "scouting_report": "New Zealand explosive opener. Aggressive starter. Vulnerable to well-directed short balls from high pace.",
+            "weaknesses": [
+                "Short-pitched high pace",
+                "Inswinging deliveries nipping back early"
+            ],
+            "strengths": [
+                "Six-hitting in powerplay",
+                "Cut shot"
+            ]
+        },
+        "D. Conway": {
+            "id": "sr:player:1028122",
+            "scouting_report": "New Zealand reliable left-handed opener. Strong technique. Susceptible to quality wrist spin on turning pitches.",
+            "weaknesses": [
+                "Quality wrist spin on turning tracks",
+                "Pace targeting the body line"
+            ],
+            "strengths": [
+                "Flick and sweep off left arm",
+                "Building innings steadily"
+            ]
+        },
+        "Shaheen Afridi": {
+            "id": "sr:player:1028130",
+            "scouting_report": "Pakistan lethal left-arm pace bowler. Dangerous with new ball. Can be driven through covers when length is too full.",
+            "weaknesses": [
+                "Full-length deliveries being driven",
+                "Right-handers moving across stumps to negate swing"
+            ],
+            "strengths": [
+                "Left-arm inswing with new ball",
+                "Bounce and carry"
+            ]
+        },
+        "Fakhar Zaman": {
+            "id": "sr:player:723774",
+            "scouting_report": "Pakistan left-handed aggressive opener. Susceptible to outswing nipping away from him.",
+            "weaknesses": [
+                "Outswing from left-arm pace",
+                "Quality off-spin from around the wicket"
+            ],
+            "strengths": [
+                "Pull and cut shot",
+                "Driving down the ground"
+            ]
+        },
+        "Shadab Khan": {
+            "id": "sr:player:875022",
+            "scouting_report": "Pakistan leg-spin all-rounder. Effective match-winner. Vulnerable to right-handers dancing down the track and hitting inside-out.",
+            "weaknesses": [
+                "Right-handers hitting inside-out over extra-cover",
+                "Flat pitches reducing turn and bounce"
+            ],
+            "strengths": [
+                "Leg-spin with sharp turn",
+                "Googly dismissals"
+            ]
+        },
+        "W. Hasaranga": {
+            "id": "sr:player:1028140",
+            "scouting_report": "Sri Lanka premier leg-spin all-rounder. World-class wrist spinner. Can be attacked by confident sweepers on flat tracks.",
+            "weaknesses": [
+                "Confident left-handers sweeping early",
+                "Flat tracks that limit bounce and spin"
+            ],
+            "strengths": [
+                "Leg-spin with sharp turn",
+                "Googly and flipper variations"
+            ]
+        },
+        "P. Nissanka": {
+            "id": "sr:player:1028142",
+            "scouting_report": "Sri Lanka attacking opener. Susceptible to pace targeting the body early in innings.",
+            "weaknesses": [
+                "High pace targeting body line early",
+                "Left-arm pace with inswing"
+            ],
+            "strengths": [
+                "Drives through covers and extra cover",
+                "Strong pulling ability"
+            ]
+        },
+        "Kusal Mendis": {
+            "id": "sr:player:752423",
+            "scouting_report": "Sri Lanka wicket-keeper batter. Capable of explosive innings. Can be dismissed by quality leg-spin early in his innings.",
+            "weaknesses": [
+                "Leg-spin early in innings",
+                "Yorkers at the death under pressure"
+            ],
+            "strengths": [
+                "Sweeping spin",
+                "Powerful hitting through the leg side"
+            ]
+        }
+    },
+    "teams": {
+        "India": {
+            "id": "sr:competitor:4801",
+            "scouting_report": "T20 WC 2026 defending champions. Led by Suryakumar Yadav (Rohit/Kohli retired from T20Is). World-class bowling attack. Playing at home gives massive advantage.",
+            "strengths": [
+                "World-class pace attack (Bumrah, Arshdeep)",
+                "Mystery spin (Chakaravarthy, Kuldeep)",
+                "Home conditions and crowd advantage"
+            ],
+            "weaknesses": [
+                "Top-order transition without Rohit and Kohli",
+                "Middle-order inexperience in knockout games"
+            ]
+        },
+        "Zimbabwe": {
+            "id": "sr:competitor:4812",
+            "scouting_report": "Surprise Super 8 qualifiers after stunning win over Australia. Strong seam attack. Cohesive unit that punches above their weight.",
+            "strengths": [
+                "Seam bowling depth (Muzarabani, Ngarava)",
+                "Team spirit and competitive intent"
+            ],
+            "weaknesses": [
+                "Batting depth against world-class spin on flat Indian tracks",
+                "Limited big-match experience at this level"
+            ]
+        },
+        "West Indies": {
+            "id": "sr:competitor:4810",
+            "scouting_report": "Two-time T20 World Cup champions. Explosive batting lineup with powerful all-rounders. Dangerous on any surface.",
+            "strengths": [
+                "Power hitting throughout the lineup",
+                "Pace bowling with bounce (Shepherd, Joseph)"
+            ],
+            "weaknesses": [
+                "Middle-overs spin bowling economy on turning tracks",
+                "Chasing large totals against quality leg-spin"
+            ]
+        },
+        "South Africa": {
+            "id": "sr:competitor:4808",
+            "scouting_report": "2024 T20 WC runners-up. Balanced team with quality pace attack and dangerous batting line-up.",
+            "strengths": [
+                "World-class pace attack (Rabada, Nortje, Jansen)",
+                "Explosive batting (De Kock, Miller, Stubbs)"
+            ],
+            "weaknesses": [
+                "Historically poor knockout performance under pressure",
+                "Spin bowling depth on subcontinent turning tracks"
+            ]
+        },
+        "England": {
+            "id": "sr:competitor:4804",
+            "scouting_report": "Ultra-aggressive T20 side. Two-time T20 World Cup champions. Deep batting lineup with dangerous all-rounders.",
+            "strengths": [
+                "Aggressive batting intent throughout lineup",
+                "Batting depth with variety (Buttler, Salt, Livingstone)"
+            ],
+            "weaknesses": [
+                "Consistency — can collapse from strong positions",
+                "Spin bowling quality on turning subcontinent tracks"
+            ]
+        },
+        "New Zealand": {
+            "id": "sr:competitor:4806",
+            "scouting_report": "Disciplined and cohesive side led by Santner. Good balance of pace and spin. Consistent performers in ICC tournaments.",
+            "strengths": [
+                "Tight left-arm spin (Santner) and wrist spin (Sodhi)",
+                "Team cohesion and smart cricketing decisions"
+            ],
+            "weaknesses": [
+                "Pace bowling depth without Boult",
+                "Batting depth against high-quality express pace"
+            ]
+        },
+        "Pakistan": {
+            "id": "sr:competitor:4805",
+            "scouting_report": "Talented but unpredictable. World-class pace attack when fit. Babar Azam key in middle order with Fakhar Zaman opening.",
+            "strengths": [
+                "Left-arm pace threat (Shaheen Afridi, Naseem Shah)",
+                "Spin variety (Shadab Khan, Abrar Ahmed)"
+            ],
+            "weaknesses": [
+                "Inconsistent batting top order under pressure",
+                "Fielding lapses and DRS decisions in crucial moments"
+            ]
+        },
+        "Sri Lanka": {
+            "id": "sr:competitor:4802",
+            "scouting_report": "Co-hosts and surprise package. Knocked out Australia in group stage. Strong spin attack, home conditions advantage.",
+            "strengths": [
+                "World-class wrist spin (Hasaranga, Theekshana, Wellalage)",
+                "Home/co-host conditions advantage in Sri Lanka"
+            ],
+            "weaknesses": [
+                "Batting fragility against high-quality pace under pressure",
+                "Inconsistency in top-order starts"
+            ]
+        }
+    },
+    "venues": {
+        "Wankhede Stadium": {
+            "characteristics": "Red soil, good bounce, high scoring. Dew factor is significant in evenings.",
+            "avg_first_innings_score": 180,
+            "win_bias": "Chasing team wins 60% of T20s due to dew and small boundaries.",
+            "pace_vs_spin": "Pacers get initial swing; Spinners struggle due to short boundaries."
+        },
+        "Melbourne Cricket Ground": {
+            "characteristics": "Huge boundaries, drop-in pitch. Balanced contest between bat and ball.",
+            "avg_first_innings_score": 160,
+            "win_bias": "Teams batting first have a slight advantage in big finals.",
+            "pace_vs_spin": "Pacers enjoy the bounce; Spinners effective due to large boundaries."
+        },
+        "Lord's": {
+            "characteristics": "Famous slope. Seam movement early on.",
+            "avg_first_innings_score": 170,
+            "win_bias": "Balanced. Overhead conditions dictate the game.",
+            "pace_vs_spin": "Seam bowlers dominate. Spinners play a holding role."
+        },
+        "Eden Gardens": {
+            "characteristics": "Black soil. Traditionally a spinner's paradise but recently aids pacers too.",
+            "avg_first_innings_score": 175,
+            "win_bias": "Chasing is preferred due to dew in winter.",
+            "pace_vs_spin": "Spinners get grip and turn. Pacers get carry in evening."
+        }
+    }
+}

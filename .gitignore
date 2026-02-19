@@ -1,0 +1,23 @@
+# Root Gitignore
+# Ignores files in the root directory and provides defaults for subdirectories
+
+# Virtual Environment (Root)
+.venv/
+venv/
+env/
+
+# OS Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE Settings
+.vscode/
+.idea/
+*.swp
+
+# Node Modules (if any in root)
+node_modules/
+
+# Logs
+*.log
