@@ -14,6 +14,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from langchain.memory import ConversationBufferWindowMemory
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import AgentType, initialize_agent
@@ -58,9 +59,11 @@ if not API_KEY:
 llm = ChatGoogleGenerativeAI(
     model=MODEL_NAME,
     google_api_key=API_KEY,
-    temperature=0.7,
+    temperature=0.2, # Lowered for more reliable tool calling
     streaming=True,
-    convert_system_message_to_human=True
+    convert_system_message_to_human=True,
+    max_retries=3,
+    timeout=30.0
 )
 
 # Tools
@@ -80,7 +83,7 @@ SYSTEM_PROMPT = """
 You are the Master Orchestrator. When the user asks a question, you must intelligently determine *which specific tool* is needed to answer it, rather than blindly fetching live scores every time.
 Follow this routing guide:
 - **"Who is playing?" / "What's the score?"**: Route to `fetch_live_match_context`.
-- **"Compare X and Y" / "Who will win?"**: Route to `analyze_match_matchup` or `calculate_win_probability`.
+- **"Compare X and Y" / "Who will win?"**: Route to `analyze_match_matchup` or `calculate_win_probability`. If mathematical probability is not possible, YOU MUST use the returned qualitative scouting data to make a DECISIVE and definitive prediction on who will win.
 - **"What are [Player]'s stats?"**: Route to `fetch_player_career_stats`.
 - **"What are the weaknesses of [Team/Player]?"**: Route to `check_scouting_notes`.
 
@@ -105,6 +108,8 @@ You have access to the following tools:
 
 Always explain your reasoning step-by-step.
 """
+
+# Memory disabled per user request to avoid 429 Token Quota Exhaustion
 
 agent_executor = initialize_agent(
     tools=tools,
