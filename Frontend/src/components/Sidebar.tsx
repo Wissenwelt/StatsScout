@@ -10,7 +10,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ onNewChat, sessions, activeSessionId, onSelectSession }) => {
     return (
-        <div className="w-64 bg-zinc-50 h-screen flex flex-col text-zinc-900 border-r border-zinc-200">
+        <div className="hidden md:flex w-64 bg-zinc-50 h-screen flex-col text-zinc-900 border-r border-zinc-200 shrink-0">
             <div className="p-4">
                 <button
                     onClick={onNewChat}
@@ -30,8 +30,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onNewChat, sessions, activeSessionId,
                         key={session.id}
                         onClick={() => onSelectSession(session.id)}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm text-left truncate group relative ${activeSessionId === session.id
-                                ? 'bg-zinc-200 text-zinc-900 font-medium'
-                                : 'text-zinc-600 hover:bg-zinc-100'
+                            ? 'bg-zinc-200 text-zinc-900 font-medium'
+                            : 'text-zinc-600 hover:bg-zinc-100'
                             }`}
                     >
                         <MessageSquare size={16} className={`shrink-0 ${activeSessionId === session.id ? 'text-zinc-900' : 'text-zinc-400'}`} />

@@ -11,10 +11,14 @@ interface ChatMessageProps {
         role: 'user' | 'assistant';
         content: string;
         thinking?: { type: 'thought' | 'action' | 'observation', content: string }[];
+        _requiresApproval?: boolean;
+        _approvalAction?: string;
     };
+    onApprove?: () => void;
+    onReject?: () => void;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, onApprove, onReject }) => {
     const isAssistant = message.role === 'assistant';
 
     // Parse tags
@@ -68,6 +72,35 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                             {content}
                         </ReactMarkdown>
                     </div>
+
+                    {/* Action Needed Button */}
+                    {isAssistant && message._requiresApproval && onApprove && (
+                        <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center justify-between bg-orange-50/50 p-4 rounded-lg border border-orange-100">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-orange-900">Action Required</p>
+                                    <p className="text-xs text-orange-700 mt-0.5">{message._approvalAction || "Approve action"}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={onReject}
+                                    className="px-4 py-2 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-medium rounded-md shadow-sm transition-colors"
+                                >
+                                    Reject
+                                </button>
+                                <button
+                                    onClick={onApprove}
+                                    className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors"
+                                >
+                                    Approve
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

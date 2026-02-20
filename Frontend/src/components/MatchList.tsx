@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, Clock, Trophy } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Clock, Trophy, RefreshCw } from 'lucide-react';
 import type { Match } from '../types';
 
 interface MatchListProps {
@@ -9,9 +9,21 @@ interface MatchListProps {
         recent: Match[];
     };
     onSelectMatch?: (match: Match) => void;
+    onRefreshMatch?: (matchId: string) => Promise<void>;
 }
 
-const MatchList: React.FC<MatchListProps> = ({ matches, onSelectMatch }) => {
+const MatchList: React.FC<MatchListProps> = ({ matches, onSelectMatch, onRefreshMatch }) => {
+    const [refreshingId, setRefreshingId] = useState<string | null>(null);
+
+    const handleRefresh = async (e: React.MouseEvent, matchId: string) => {
+        e.stopPropagation();
+        if (onRefreshMatch) {
+            setRefreshingId(matchId);
+            await onRefreshMatch(matchId);
+            setRefreshingId(null);
+        }
+    };
+
     const hasMatches = matches.live.length > 0 || matches.upcoming.length > 0 || matches.recent.length > 0;
 
     if (!hasMatches) {
@@ -42,8 +54,18 @@ const MatchList: React.FC<MatchListProps> = ({ matches, onSelectMatch }) => {
                                 onClick={() => onSelectMatch?.(match)}
                                 className="bg-white border border-red-100 rounded-lg p-3 shadow-sm hover:border-red-200 hover:shadow-md transition-all cursor-pointer relative overflow-hidden group"
                             >
-                                <div className="absolute top-0 right-0 p-1.5 bg-red-50 rounded-bl-lg">
+                                <div className="absolute top-0 right-0 p-1.5 bg-red-50 rounded-bl-lg flex items-center gap-2">
                                     <span className="text-[10px] font-bold text-red-600 px-1">LIVE</span>
+                                </div>
+                                <div className="absolute bottom-2 right-2">
+                                    <button
+                                        onClick={(e) => handleRefresh(e, match.id)}
+                                        disabled={refreshingId === match.id}
+                                        className="p-1.5 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors disabled:opacity-50"
+                                        title="Refresh Match Score"
+                                    >
+                                        <RefreshCw size={14} className={refreshingId === match.id ? "animate-spin" : ""} />
+                                    </button>
                                 </div>
                                 <div className="space-y-1">
                                     <div className="font-semibold text-zinc-800 text-sm">{match.team1}</div>

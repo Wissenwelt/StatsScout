@@ -1,3 +1,9 @@
+import sys
+import io
+
+# Fix Windows charmap error when printing emojis
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 import os
 import uvicorn
 import asyncio
@@ -18,11 +24,23 @@ from tools import (
     calculate_win_probability,
     fetch_player_career_stats,
     analyze_match_matchup,
+    request_user_approval,
     client
 )
 from callbacks import AgentCallbackHandler
 
 load_dotenv()
+
+class ApprovalRequiredException(Exception):
+    def __init__(self, action_description):
+        self.action_description = action_description
+        self.message = json.dumps({
+            "status": "approval_required",
+            "message": f"Please approve the following action: {action_description}",
+            "action": action_description
+        })
+        super().__init__(self.message)
+
 
 # --- Configuration ---
 # Simple Chatbot Configuration
@@ -52,33 +70,38 @@ tools = [
     fetch_player_profile,
     calculate_win_probability,
     fetch_player_career_stats,
-    analyze_match_matchup
+    analyze_match_matchup,
+    request_user_approval
 ]
 
 # Agent Setup
 SYSTEM_PROMPT = """
-You are "Smart Scout", an advanced cricket analytics assistant.
-Your goal is to provide tactical insights by combining live match data with historical scouting reports.
+**ORCHESTRATOR ROUTING LOGIC:**
+You are the Master Orchestrator. When the user asks a question, you must intelligently determine *which specific tool* is needed to answer it, rather than blindly fetching live scores every time.
+Follow this routing guide:
+- **"Who is playing?" / "What's the score?"**: Route to `fetch_live_match_context`.
+- **"Compare X and Y" / "Who will win?"**: Route to `analyze_match_matchup` or `calculate_win_probability`.
+- **"What are [Player]'s stats?"**: Route to `fetch_player_career_stats`.
+- **"What are the weaknesses of [Team/Player]?"**: Route to `check_scouting_notes`.
 
-Follow this thought process STRICTLY for every request:
-1. Check the live match context first to see who is playing.
-2. Identify the active batsman or key players involved.
-   - **UI ACTION:** If discussing a specific player, output `[HIGHLIGHT: Player Name]` at the start of your sentence to focus the UI on them.
-3. Cross-reference their names with your Scouting Notes (knowledge base).
-4. **Deep Match Analysis (Qualitative):** If the user asks for a prediction, "strength/weakness", or "who will win?", AND live data is sparse (e.g. no balls/runs info), use `analyze_match_matchup`.
-   - This tool gets you full team rosters. Use these rosters to judge Team Strength to make a prediction.
-   - **CRITICAL FALLBACK:** If the tool returns "WARNING: Live roster data is unavailable", you **MUST** use your own INTERNAL KNOWLEDGE about these teams/players (e.g. "Sri Lanka is known for spin", "Zimbabwe has Sikandar Raza") to provide the analysis. Do not refuse to answer.
-5. **Historical Validation:** If you need to assess a player's quality (e.g., "Is he a good T20 bowler?"), use `fetch_player_career_stats`.
-6. **Win Probability (Quantitative):** If and ONLY IF you have precise live data (runs needed, balls remaining, wickets), use `calculate_win_probability`.
-   - If this tool fails or data is missing, FALLBACK to the qualitative analysis from Step 4.
-7. Suggest a tactical move or highlight a weakness based on the data.
+**STRICT EXECUTION WORKFLOW:**
+1. **Analyze:** Read the user's prompt and use the Orchestrator Routing Logic to decide on the single best tool to use.
+2. **Request Approval (Mandatory):** BEFORE executing that tool, you MUST call `request_user_approval`. For the `action_description` argument, state the exact tool you want to use and why. 
+    - Example: `{"action": "request_user_approval", "action_input": "Use check_scouting_notes to compare the strengths of India and Sri Lanka."}`
+3. **Wait:** DO NOT output any other tool calls at this stage. Stop and wait for the user to reply.
+4. **Vague Answers:** If the user replies vaguely, ask: "I did not understand. Do I have your permission to proceed with the tool call? Please say Yes or No."
+5. **Execute:** ONLY proceed to call your chosen tool if the user's message explicitly starts with "I approve. Proceed with:".
+
+**UI COMMANDS:**
+- If discussing a specific player after approval, output `[HIGHLIGHT: Player Name]` to focus the UI.
 
 You have access to the following tools:
-- fetch_live_match_context: Get current match scorecard and players.
-- check_scouting_notes: Search for scouting reports on specific players/venues.
-- fetch_player_career_stats: Get historical career stats (Runs, Wickets, Avg).
-- calculate_win_probability: Calculate win % based on math.
-- analyze_match_matchup: Fetch full team rosters/profiles for a match. Use this for predictions when live data is insufficient.
+- fetch_live_match_context: Get current match scorecard and players. REQUIRES APPROVAL.
+- check_scouting_notes: Search for scouting reports on specific players/venues. REQUIRES APPROVAL.
+- fetch_player_career_stats: Get historical career stats (Runs, Wickets, Avg). REQUIRES APPROVAL.
+- calculate_win_probability: Calculate win %. REQUIRES APPROVAL.
+- analyze_match_matchup: Fetch full team rosters. REQUIRES APPROVAL.
+- request_user_approval: THE ONLY TOOL YOU CAN CALL FREELY. YOU MUST CALL THIS FIRST TO GET PERMISSION TO CALL ANY OF THE OTHER TOOLS.
 
 Always explain your reasoning step-by-step.
 """
@@ -88,6 +111,7 @@ agent_executor = initialize_agent(
     llm=llm,
     agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     verbose=True,
+    handle_parsing_errors=True,
     agent_kwargs={
         "system_message": SystemMessage(content=SYSTEM_PROMPT)
     }
@@ -109,6 +133,8 @@ class ChatRequest(BaseModel):
     history: list = []
 
 async def generate_response(message: str):
+    import tools
+    tools.GLOBAL_USER_MESSAGE = message
     queue = asyncio.Queue()
     handler = AgentCallbackHandler(queue)
     
@@ -137,8 +163,20 @@ async def generate_response(message: str):
                 if task.done():
                     # Check for exceptions
                     if task.exception():
-                        error_msg = json.dumps({"type": "error", "content": str(task.exception())})
-                        yield f"data: {error_msg}\n\n"
+                        exc = task.exception()
+                        # Check if it's our custom approval exception
+                        if "approval_required" in str(exc):
+                            try:
+                                # Extract just the JSON portion if it's wrapped in an Exception string
+                                err_str = str(exc)
+                                # The exception message is exactly the JSON string due to our custom Exception
+                                msg_data = json.loads(err_str)
+                                yield f"data: {json.dumps({'type': 'observation', 'content': err_str, '_requiresApproval': True, '_approvalAction': msg_data.get('action')})}\n\n"
+                            except json.JSONDecodeError:
+                                yield f"data: {json.dumps({'type': 'error', 'content': str(exc)})}\n\n"
+                        else:
+                            error_msg = json.dumps({"type": "error", "content": str(exc)})
+                            yield f"data: {error_msg}\n\n"
                     else:
                         # Get result
                         result = task.result()
@@ -314,6 +352,40 @@ async def get_match_list():
 
     except Exception as e:
         print(f"Error in match-list: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/match/{match_id}/refresh")
+async def refresh_match(match_id: str):
+    """
+    Fetches the latest summary for a specific match.
+    Used for manual live score refreshing.
+    """
+    if not client:
+        raise HTTPException(status_code=500, detail="Sportradar Client not initialized")
+    
+    try:
+        summary = client.get_match_summary(match_id)
+        if not summary:
+            raise HTTPException(status_code=404, detail="Match not found or data unavailable")
+        
+        status_obj = summary.get('sport_event_status', {})
+        display_status = status_obj.get('status', 'Live')
+        score = ""
+        
+        if 'period_scores' in status_obj:
+            scores = []
+            for p in status_obj['period_scores']:
+                scores.append(f"{p.get('type')}: {p.get('display_score')}")
+            score = ", ".join(scores)
+            
+        return {
+            "id": match_id,
+            "status": display_status,
+            "score": score
+        }
+            
+    except Exception as e:
+        print(f"Error refreshing match {match_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/chat")

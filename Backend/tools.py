@@ -4,7 +4,23 @@ from langchain.tools import tool
 from sportradar_client import SportradarClient
 from dotenv import load_dotenv
 
+class ApprovalRequiredException(Exception):
+    def __init__(self, action_description):
+        self.action_description = action_description
+        self.message = json.dumps({
+            "status": "approval_required",
+            "message": f"Please approve the following action: {action_description}",
+            "action": action_description
+        })
+        super().__init__(self.message)
+
 load_dotenv()
+
+GLOBAL_USER_MESSAGE = ""
+
+def verify_approval(action_description: str):
+    if not GLOBAL_USER_MESSAGE.strip().startswith("I approve. Proceed with:"):
+        raise ApprovalRequiredException(action_description)
 
 # Initialize Client
 SPORTRADAR_API_KEY = os.getenv("SPORTRADAR_API_KEY")
@@ -56,12 +72,14 @@ def harvest_player_ids(match_list):
         print(f"Error harvesting IDs: {e}")
 
 @tool
-def fetch_daily_results():
+def fetch_daily_results(query: str = ""):
     """
     Fetches the list of cricket matches completed today.
     Returns the results and automatically learns player IDs from these matches.
     Useful for checking past game scores and updating the player database.
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("fetch_daily_results")
     if not client:
         return json.dumps({"error": "Sportradar Client not initialized."})
 
@@ -127,12 +145,14 @@ def fetch_daily_results():
         return json.dumps({"error": f"Error fetching daily results: {e}"})
 
 @tool
-def fetch_live_match_context():
+def fetch_live_match_context(query: str = ""):
     """
     Fetches the current live cricket match context. 
     Returns the scorecard and active players for any live matches as a JSON string.
     Useful for finding out who is currently batting or bowling.
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("fetch_live_match_context")
     if not client:
         return json.dumps({"error": "Sportradar Client not initialized (Missing API Key)."})
     
@@ -244,7 +264,9 @@ def fetch_player_profile(player_id: str):
     """
     Fetches detailed profile and statistics for a specific player using their Sportradar Player ID (URN).
     Input should be the player ID (e.g., "sr:player:123456") obtained from `fetch_live_match_context`.
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("fetch_player_profile")
     if not client:
         return "Error: Client not initialized."
     
@@ -260,9 +282,11 @@ def fetch_player_profile(player_id: str):
 def check_scouting_notes(name: str):
     """
     Checks the local scouting knowledge base for reports on a specific player, team, or venue.
-    Input should be the player's name (e.g., "V. Kohli"), team name (e.g., "India"), or venue name.
-    Returns the scouting report if found.
+    Input should be the EXACT player name (e.g., "V. Kohli") or team name (e.g., "India", "Zimbabwe").
+    Returns the scouting report if found in knowledge.json.
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("check_scouting_notes")
     # Simple fuzzy search or direct key match
     # knowledge.json structure: {"players": {...}, "teams": {...}}
     players = knowledge_base.get("players", {})
@@ -270,45 +294,56 @@ def check_scouting_notes(name: str):
     
     name_lower = name.lower()
     
-    # Check Players
-    if name in players:
-         return f"Player Report ({name}): {json.dumps(players[name])}"
-    for p_name, report in players.items():
-        if name_lower in p_name.lower() or p_name.lower() in name_lower:
-            return f"Player Report ({p_name}): {json.dumps(report)}"
-
+    reports = []
+    
     # Check Teams
     if name in teams:
-        return f"Team Report ({name}): {json.dumps(teams[name])}"
-    for t_name, report in teams.items():
-        if name_lower in t_name.lower() or t_name.lower() in name_lower:
-            return f"Team Report ({t_name}): {json.dumps(report)}"
+        reports.append(f"Team Report ({name}): {json.dumps(teams[name])}")
+    else:
+        for t_name, report in teams.items():
+            if name_lower in t_name.lower() or t_name.lower() in name_lower:
+                reports.append(f"Team Report ({t_name}): {json.dumps(report)}")
+
+    # Check Players (match name or if the query is in their report, e.g. "India")
+    for p_name, report in players.items():
+        if name_lower in p_name.lower() or p_name.lower() in name_lower:
+             reports.append(f"Player Report ({p_name}): {json.dumps(report)}")
+        elif "scouting_report" in report and name_lower in report["scouting_report"].lower():
+             reports.append(f"Player Report ({p_name}): {json.dumps(report)}")
 
     # Check Venues
     venues = knowledge_base.get("venues", {})
     if name in venues:
-        return f"Venue Report ({name}): {json.dumps(venues[name])}"
-    for v_name, report in venues.items():
-        if name_lower in v_name.lower() or v_name.lower() in name_lower:
-            return f"Venue Report ({v_name}): {json.dumps(report)}"
+        reports.append(f"Venue Report ({name}): {json.dumps(venues[name])}")
+    else:
+        for v_name, report in venues.items():
+            if name_lower in v_name.lower() or v_name.lower() in name_lower:
+                reports.append(f"Venue Report ({v_name}): {json.dumps(report)}")
             
+    if reports:
+        return "\n".join(reports)
     return f"No scouting report found for '{name}'."
 
 @tool
-def calculate_win_probability(runs_needed: int, balls_remaining: int, wickets_in_hand: int, target_score: int, format: str = "T20"):
+def calculate_win_probability(runs_needed: int, balls_remaining: int, wickets_in_hand: int, target_score: int, chasing_team: str, defending_team: str, format: str = "T20"):
     """
-    Calculates the win probability for the chasing team.
+    Calculates the win probability for the chasing team and provides tactical context.
     
     Args:
         runs_needed (int): Runs required to win.
         balls_remaining (int): Balls left in the innings.
         wickets_in_hand (int): Number of wickets remaining (10 - wickets_lost).
         target_score (int): The total score the chasing team is chasing.
+        chasing_team (str): Name of the team batting second (e.g., "India").
+        defending_team (str): Name of the team bowling second (e.g., "Zimbabwe").
         format (str): Match format ('T20' or 'ODI'). Default is 'T20'.
         
     Returns:
-        str: A formatted string with Win Probability %, Required Run Rate, and analysis.
+        str: A formatted string with Win Probability %, Required Run Rate, and analysis combined with team knowledge.
+    
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("calculate_win_probability")
     try:
         if balls_remaining <= 0:
             if runs_needed <= 0:
@@ -318,21 +353,13 @@ def calculate_win_probability(runs_needed: int, balls_remaining: int, wickets_in
         rrr = (runs_needed / balls_remaining) * 6
         
         # Basic heuristic model for T20
-        # Start with 50-50 base
         win_prob = 50.0
         
         # Adjust for RRR
-        # Standard T20 RRR is around 8.0. 
-        # For every 1 run above 8, -5% win prob.
-        # For every 1 run below 8, +5% win prob.
         diff_rrr = 8.0 - rrr
         win_prob += (diff_rrr * 5)
         
         # Adjust for Wickets
-        # Expectation: Should have wickets proportional to runs needed?
-        # Simpler: 
-        # If wickets < 4, heavy penalty (-20%)
-        # If wickets > 7, bonus (+10%)
         if wickets_in_hand < 4:
             win_prob -= 20
         elif wickets_in_hand > 7:
@@ -350,12 +377,45 @@ def calculate_win_probability(runs_needed: int, balls_remaining: int, wickets_in
         elif rrr < 6:
             analysis = "Cruising. Just need to rotate strike."
         else:
-            analysis = "Balanced game. Wickets will differeniate the winner."
+            analysis = "Balanced game. Wickets will differentiate the winner."
+
+        # Fetch Context from Knowledge Base
+        teams_kb = knowledge_base.get("teams", {})
+        chasing_info = teams_kb.get(chasing_team, {})
+        defending_info = teams_kb.get(defending_team, {})
+
+        context_analysis = "\n\n**Qualitative Context:**"
+        
+        if chasing_info.get("strengths"):
+            context_analysis += f"\n- {chasing_team} Strengths: " + ", ".join(chasing_info["strengths"])
+        if chasing_info.get("weaknesses"):
+            context_analysis += f"\n- {chasing_team} Weaknesses: " + ", ".join(chasing_info["weaknesses"])
             
-        return f"Win Probability: {win_prob:.1f}% | RRR: {rrr:.2f} | Status: {analysis}"
+        if defending_info.get("strengths"):
+            context_analysis += f"\n- {defending_team} Strengths: " + ", ".join(defending_info["strengths"])
+        if defending_info.get("weaknesses"):
+            context_analysis += f"\n- {defending_team} Weaknesses: " + ", ".join(defending_info["weaknesses"])
+            
+        if not chasing_info and not defending_info:
+            context_analysis = "\n\n*(No tactical scouting reports found in local knowledge base for these teams to enhance this prediction.)*"
+            
+        return f"**Mathematical Win Probability**: {win_prob:.1f}%\n**Required Run Rate**: {rrr:.2f}\n**Situation**: {analysis}{context_analysis}"
         
     except Exception as e:
         return f"Error calculating probability: {e}"
+
+@tool
+def request_user_approval(action_description: str):
+    """
+    Halts execution to ask the user for permission to proceed with a sensitive action (like calculating win probability).
+    Args:
+        action_description (str): A clear description of what you want to do (e.g., "Calculate win probability for India vs Zimbabwe").
+    Returns:
+        str: A JSON string indicating approval is required. The UI will pause and wait for user input.
+    """
+    # Simply returning a string does not stop the Langchain Agent Executor.
+    # We MUST raise an exception to physically break the while loop of the agent.
+    raise ApprovalRequiredException(action_description)
 
 @tool
 def fetch_player_career_stats(player_id: str):
@@ -363,7 +423,9 @@ def fetch_player_career_stats(player_id: str):
     Fetches and summarizes a player's career statistics (Batting/Bowling).
     Use this to validate a player's quality or form.
     Input: Player ID (e.g., "sr:player:123456") OR Player Name (e.g. "Virat Kohli").
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("fetch_player_career_stats")
     if not client:
         return "Error: Client not initialized."
     
@@ -476,7 +538,10 @@ def analyze_match_matchup(match_id: str = None, team_names: list = None):
         
     Returns:
         str: JSON string containing full rosters and details for both teams.
+        
+    **CRITICAL**: DO NOT USE THIS TOOL DIRECTLY. You MUST call `request_user_approval` first and wait for the user's explicit permission.
     """
+    verify_approval("analyze_match_matchup")
     if not client:
         return "Error: Client not initialized."
     
@@ -548,7 +613,7 @@ def analyze_match_matchup(match_id: str = None, team_names: list = None):
                 matchup_data["teams"].append(t_data)
         
         if not has_rosters:
-             matchup_data["message"] = "WARNING: Live roster data is unavailable from Sportradar API. Please use your INTERNAL KNOWLEDGE to analyze these teams based on their names."
+             matchup_data["message"] = "WARNING: Live roster data is unavailable from Sportradar API. Please immediately use the `check_scouting_notes` tool to check your local Knowledge Base for these teams (" + ", ".join([t['name'] for t in matchup_data["teams"]]) + ") to provide an analysis."
                 
         return json.dumps(matchup_data, indent=2)
 
