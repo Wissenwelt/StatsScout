@@ -52,8 +52,18 @@ The agent has access to 5+ robust tools:
 ### 1. Setup Backend
 ```bash
 cd Backend
-# create .env file with SPORTRADAR_API_KEY=your_key_here
+# 1. Create a Virtual Environment (Recommended for Mac/Linux)
+python3 -m venv venv
+
+# 2. Activate the Environment
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Create .env file with SPORTRADAR_API_KEY=your_key_here
+
+# 5. Run the server
 python main.py
 # Server runs on http://localhost:8000
 # NOTE: The Frontend expects the backend on port 8000.
