@@ -48,6 +48,7 @@ The agent has access to 5+ robust tools:
 -   Node.js & npm
 -   Python 3.10+
 -   Sportradar API Key (Cricket)
+-   Gemini API key (google AI studio)
 
 ### 1. Setup Backend
 ```bash
