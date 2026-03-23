@@ -1,4 +1,4 @@
-# 🏏 StatsScout - VIBE Code Submission
+# 🏏 StatsScout 
 
 **StatsScout** is an agentic cricket analytics dashboard where "Smart Scout" (an AI agent) helps users analyze live matches, predict outcomes, and scout players using real-time data and historical knowledge.
 
